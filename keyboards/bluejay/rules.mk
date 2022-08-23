@@ -5,8 +5,8 @@ MCU = atmega328p
 BOOTLOADER = usbasploader
 
 # Build Options
-#   change yes to no to disable
-#
+CUSTOM_MATRIX = lite
+
 BOOTMAGIC_ENABLE = no       # Enable Bootmagic Lite
 MOUSEKEY_ENABLE = no        # Mouse keys
 EXTRAKEY_ENABLE = no        # Audio control and System control
@@ -16,9 +16,7 @@ BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 RGBLIGHT_ENABLE = no        # Enable keyboard RGB underglow
 ENCODER_ENABLE = no         # Enable rotary encoder
 OLED_ENABLE = no
-#OLED_DRIVER = SSD1306
 WPM_ENABLE = no
-CUSTOM_MATRIX = lite
 
 SRC += matrix.c \
     mcp23017.c
