@@ -2,7 +2,7 @@
 
 ![bluejay]()
 
-The split keyboard kit made by through hole components only.
+Yet another split keyboard build solely using through hole components.
 
 The design has been inspired by the Torn keyboard.
 

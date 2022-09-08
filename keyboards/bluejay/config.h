@@ -35,15 +35,15 @@
  *
  */
 #define MATRIX_ROW_PINS \
-    { D4, D1, D0, D5 } // To do: need to update this
+    { D0, D1, B1, B2, B3 } // Left hand (master side), scan from top (row 1) to bottom (row 5)
 #define MATRIX_COL_PINS \
-    { B3, B4, B5, B0, D7, D6 } // To do: need to update this
+    { C0, C1, C2, C3, D7, B0 } // Left hand (master side), sacn from left (col F) to right (col A)
 #define UNUSED_PINS
 
 #define SECONDARY_ROW_PINS \
-    { (1 << 5), (1 << 6), (1 << 7), (1 << 4) } // To do: need to update this
+    { (1 << 7), (1 << 6), (1 << 1), (1 << 0), (1 << 15) } // Right hand (MCP side), scan from top (row 1) to bottom (row 5): A7, A6, A1, A0, B7 (8+7)
 #define SECONDARY_COL_PINS \
-    { (1 << 3), (1 << 2), (1 << 1), (1 << 0), (1 << 15), (1 << 14) } // To do: need to update this
+    { (1 << 2), (1 << 3), (1 << 8), (1 << 9), (1 << 10), (1 << 11) } // Right hand (MCP side), scan from left (col A) to right (col F): A2, A3, B0, B1, B2, B3
 
 /* COL2ROW, ROW2COL*/
 #define DIODE_DIRECTION ROW2COL

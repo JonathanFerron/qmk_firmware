@@ -1,4 +1,5 @@
 /*
+ * Copyright 2022 Jonathan Ferron https://github.com/JonathanFerron 
  * Copyright 2020 Richard Titmuss (richard.titmuss@gmail.com)
  * Copyright 2012-2018 Jun Wako, Jack Humbert, Yiancar
  *
@@ -29,12 +30,19 @@ static i2c_status_t mcp23017_status = I2C_STATUS_ERROR;
 void mcp23017_init(void) {
     mcp23017_status = I2C_STATUS_SUCCESS;
 
-    // Set pin direction - To do: need to check if this is done correctly for bluejay, check datasheet
-    uint8_t iodir[] = {0b00001111, 0b11111111};
+    // port a from a7 to a0: rowl, row2, unused, unused, colB, colA, row3, row4: RRUUCCRR
+    // port b from b7 to b0: row5, unused, unused, unused, colF, colE, colD, colC: RUUUCCCC
+
+    // Set pin direction - A7..A0, B7..B0
+    // 0 : output for column pins
+    // 1 : input for row pins or for unused pins
+    uint8_t iodir[] = {0b11110011, 0b11110000};
     mcp23017_writeReg(IODIRA, iodir, 2);
 
-    // Set pull-up - To do: need to check if this is done correctly for bluejay, check datasheet
-    uint8_t gppu[] = {0b00001111, 0b11111000};
+    // Set pull-up - A7..A0, B7..B0
+    // 0 : pull-up off for column pins, or by default for unused pins
+    // l : pull-up on for row pins
+    uint8_t gppu[] = {0b11000011, 0b10000000};
     mcp23017_writeReg(GPPUA, gppu, 2);
 }
 

@@ -18,11 +18,11 @@
 
 #pragma once
 
-#define IODIRA 0x00 // to do: double check that all of the defines here are correct as-is for bluejay
+#define IODIRA 0x00 // Input / Output config bit for port A / B: see page 12 of the MCP datasheet
 #define IODIRB 0x01
-#define GPPUA 0x0C
+#define GPPUA 0x0C // internal pull up registers addresses
 #define GPPUB 0x0D
-#define GPIOA 0x12
+#define GPIOA 0x12 // General purpose data port A / B addresses
 #define GPIOB 0x13
 
 typedef int16_t mcp23017_status_t;
