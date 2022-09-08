@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Richard Titmuss <richard.titmuss@gmail.com>
+ * Copyright 2022 Jonathan Ferron
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
