@@ -57,60 +57,60 @@ static void init_pins(void) {
     }
 }
 
-static matrix_col_t read_rows(void) {
-    matrix_col_t state = 0;
+static void read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col, matrix_row_t row_shifter) {
+   // Select col
+    if (current_col < SPLIT_MATRIX_COLS) {
+        if (!select_col(current_col)) { // select col
+            return;                     // skip NO_PIN col
+        }
+    } else {
+        if (!select_secondary_col(current_col)) { // select col
+            return;                     // skip NO_PIN col
+        }
 
+        uint8_t mcp23017_pin_state[2];
+        if (mcp23017_readReg(GPIOA, mcp23017_pin_state, 2)) {
+            return 0;
+        }
+
+        uint16_t pins = mcp23017_pin_state[0] | (mcp23017_pin_state[1] << 8);
+    }    
+ 
     // For each row...
     for (uint8_t row_index = 0; row_index < MATRIX_ROWS; row_index++) {
-        // Select the row pin to read (active low)
-        uint8_t pin_state = readPin(row_pins[row_index]);
+        // Check row pin state
+        uint16_t pin_state;
+        if (current_col < SPLIT_MATRIX_COLS) {
+            pin_state = readPin(row_pins[row_index]);
+        } else {
+            pin_state = pins & (secondary_row_pins[row_index]);
+        }
 
-        // Populate the matrix col with the state of the row pin
-        state |= pin_state ? 0 : (MATRIX_COL_SHIFTER << row_index);
+        if (pin_state == 0) {
+            // Pin LO, set col bit
+            current_matrix[row_index] |= row_shifter;           
+        } else {
+            // Pin HI, clear col bit
+            current_matrix[row_index] &= ~row_shifter;
+        }
     }
 
-    return state;
-}
-
-static matrix_col_t read_secondary_rows(void) {
-    matrix_col_t state = 0;
-
-    uint8_t mcp23017_pin_state[2];
-    if (mcp23017_readReg(GPIOA, mcp23017_pin_state, 2)) {
-        return 0;
-    }
-
-    uint16_t pins = mcp23017_pin_state[0] | (mcp23017_pin_state[1] << 8);
-
-    for (uint8_t row_index = 0; row_index < MATRIX_ROWS; row_index++) {
-        uint16_t pin_state = pins & (secondary_row_pins[row_index]);
-        state |= pin_state ? 0 : (MATRIX_COL_SHIFTER << row_index);
-    }
-
-    return state;
-}
-
-static bool read_rows_on_col(matrix_col_t current_matrix[], uint8_t current_col) {
-    matrix_col_t last_col_value = current_matrix[current_col];
-
-    select_col(current_col);
-    select_secondary_col(current_col);
-
-    current_matrix[current_col] = read_rows() | (read_secondary_rows() << 6);
-
+    // Unselect col
     unselect_col(current_col);
-
-    return (last_col_value != current_matrix[current_col]);
 }
 
 void matrix_init_custom(void) { init_pins(); }
 
-bool matrix_scan_custom(matrix_col_t current_matrix[]) {
-    bool changed = false;
+bool matrix_scan_custom(matrix_row_t current_matrix[]) {
+    matrix_row_t orig_matrix[MATRIX_ROWS] = {0};
+    memcpy(orig_matrix, current_matrix, sizeof(current_matrix));
 
-    for (uint8_t current_col = 0; current_col < SPLIT_MATRIX_COLS; current_col++) {
-        changed |= read_rows_on_col(current_matrix, current_col);
+    matrix_row_t row_shifter = MATRIX_ROW_SHIFTER;
+    for (uint8_t current_col = 0; current_col < MATRIX_COLS; current_col++, row_shifter <<= 1) {
+        read_rows_on_col(current_matrix, current_col, row_shifter);
     }
 
+    bool changed = memcmp(orig_matrix, current_matrix, sizeof(current_matrix)) != 0;
+    
     return changed;
 }
