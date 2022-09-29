@@ -1,15 +1,15 @@
 {
-  "keyboard_name": "Torn",
-  "manufacturer": "richard.titmuss",
-  "url": "https://github.com/rtitmuss/torn",
-  "maintainer": "rtitmuss",
+  "keyboard_name": "BlueJay",
+  "manufacturer": "jonathan.ferron",
+  "url": "https://github.com/JonathanFerron/bluejay",
+  "maintainer": "jferron",
   "usb": {
     "vid": "0x7274",
     "pid": "0x0001",
     "device_version": "0.0.1"
   },
   "layouts": {
-    "LAYOUT_split_3x6_4": {
+    "LAYOUT_split_5_3x6_4": {
       "layout": [
         {"label":"SW1",  "x":0, "y":0.375},
         {"label":"SW2",  "x":1, "y":0.375},
@@ -54,7 +54,17 @@
         {"label":"SW41", "x":8, "y":3.55},
         {"label":"SW42", "x":9, "y":3.40},
         {"label":"SW43", "x":10, "y":3.25},
-        {"label":"SW44", "x":11, "y":3.1}
+        {"label":"SW44", "x":11, "y":3.1},
+        {"label":"SW45", "x":11, "y":3.1},
+        {"label":"SW46", "x":11, "y":3.1},
+        {"label":"SW47", "x":11, "y":3.1},
+        {"label":"SW48", "x":11, "y":3.1},
+        {"label":"SW49", "x":11, "y":3.1},
+        {"label":"SW50", "x":11, "y":3.1},
+        {"label":"SW51", "x":11, "y":3.1},
+        {"label":"SW52", "x":11, "y":3.1},
+        {"label":"SW53", "x":11, "y":3.1},
+        {"label":"SW54", "x":11, "y":3.1}
       ]
     }
   }

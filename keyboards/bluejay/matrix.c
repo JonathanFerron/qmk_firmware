@@ -18,7 +18,9 @@
  */
 
 #include QMK_KEYBOARD_H
+#include <string.h>
 #include "mcp23017.h"
+
 
 #define SPLIT_MATRIX_COLS (MATRIX_COLS / 2)
 //#define SECONDARY_ROW_OFFSET (MATRIX_ROWS / 2)
@@ -46,8 +48,10 @@ static void unselect_cols(void) {
 }
 
 static void select_secondary_col(uint8_t col) {
-    uint8_t gpioa = 0xFF & ~secondary_col_pins[col];
-    mcp23017_writeReg(GPIOA, &gpioa, 1);
+    uint8_t gpio[2];
+    gpio[0] = ~secondary_col_pins[col] & 0x00FF; // least significant byte for A register
+    gpio[1] = (~secondary_col_pins[col] & 0xFF00) >> 8; // most significant byte for B register
+    mcp23017_writeReg(GPIOA, gpio, 2);
 }
 
 static void init_pins(void) {
@@ -60,20 +64,9 @@ static void init_pins(void) {
 static void read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col, matrix_row_t row_shifter) {
    // Select col
     if (current_col < SPLIT_MATRIX_COLS) {
-        if (!select_col(current_col)) { // select col
-            return;                     // skip NO_PIN col
-        }
+        select_col(current_col);  // select col        
     } else {
-        if (!select_secondary_col(current_col)) { // select col
-            return;                     // skip NO_PIN col
-        }
-
-        uint8_t mcp23017_pin_state[2];
-        if (mcp23017_readReg(GPIOA, mcp23017_pin_state, 2)) {
-            return 0;
-        }
-
-        uint16_t pins = mcp23017_pin_state[0] | (mcp23017_pin_state[1] << 8);
+        select_secondary_col(current_col); // select col        
     }    
  
     // For each row...
@@ -83,6 +76,10 @@ static void read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col,
         if (current_col < SPLIT_MATRIX_COLS) {
             pin_state = readPin(row_pins[row_index]);
         } else {
+            uint8_t mcp23017_pin_state[2];
+            mcp23017_readReg(GPIOA, mcp23017_pin_state, 2);
+
+            uint16_t pins = mcp23017_pin_state[0] | (mcp23017_pin_state[1] << 8);
             pin_state = pins & (secondary_row_pins[row_index]);
         }
 
@@ -96,21 +93,25 @@ static void read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col,
     }
 
     // Unselect col
-    unselect_col(current_col);
+    if (current_col < SPLIT_MATRIX_COLS) {
+        unselect_col(current_col);
+    }
 }
 
 void matrix_init_custom(void) { init_pins(); }
 
 bool matrix_scan_custom(matrix_row_t current_matrix[]) {
+    bool changed = false;
+
     matrix_row_t orig_matrix[MATRIX_ROWS] = {0};
-    memcpy(orig_matrix, current_matrix, sizeof(current_matrix));
+    memcpy(orig_matrix, current_matrix, sizeof(orig_matrix));
 
     matrix_row_t row_shifter = MATRIX_ROW_SHIFTER;
     for (uint8_t current_col = 0; current_col < MATRIX_COLS; current_col++, row_shifter <<= 1) {
         read_rows_on_col(current_matrix, current_col, row_shifter);
     }
 
-    bool changed = memcmp(orig_matrix, current_matrix, sizeof(current_matrix)) != 0;
+    changed = memcmp(orig_matrix, current_matrix, sizeof(orig_matrix)) != 0;
     
     return changed;
 }
