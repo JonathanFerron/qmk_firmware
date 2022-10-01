@@ -66,7 +66,7 @@ static void read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col,
     if (current_col < SPLIT_MATRIX_COLS) {
         select_col(current_col);  // select col        
     } else {
-        select_secondary_col(current_col); // select col        
+        select_secondary_col(current_col-SPLIT_MATRIX_COLS); // select col        
     }    
  
     // For each row...

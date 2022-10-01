@@ -37,3 +37,5 @@ This is the configuration file for the keymap
 
 // Set desired unicode input mode
 #define UNICODE_SELECTED_MODES UC_WINC, UC_WIN, UC_LNX
+
+//#define DEBUG_MATRIX_SCAN_RATE
