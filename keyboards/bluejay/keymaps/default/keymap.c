@@ -143,13 +143,13 @@ const uint32_t PROGMEM unicode_map[] = {
 const custom_shift_key_t custom_shift_keys[] = {
   {KC_DOT , KC_EXLM}, // Shift . is !
   {KC_COMM, KC_QUES}, // Shift , is ?
-  {KC_PERC, KC_PIPE}, // Shift % is |
-  {KC_LPRN, KC_LT},   // Shift ( is <
+  {KC_PERC, KC_PIPE}, // Shift % is | -- will need to change this for bluejay
+  {KC_LPRN, KC_LT},   // Shift ( is <  -- will need to change this for bluejay
   {KC_COLN, KC_SCLN}, // Shift : is ; 
   {KC_LCBR, KC_RCBR}, // Shift { is } 
   {LT(0,KC_LBRC), KC_RBRC}, // Shift [ is ] 
   {KC_SLSH, KC_BSLS}, // Shift slash is backslash
-  {KC_RPRN, KC_GT} // Shift ) is >
+  {KC_RPRN, KC_GT} // Shift ) is >   -- will need to change this for bluejay
 };
 
 uint8_t NUM_CUSTOM_SHIFT_KEYS = sizeof(custom_shift_keys) / sizeof(custom_shift_key_t);
@@ -178,10 +178,10 @@ typedef struct {
 
 // Tap dance enums
 enum {
-    _TDUNDO,
+    _TDUNDO, // may be able to remove all tap dances since we're only using them for tap and hold, which can be tackled easily in process_record_user()
     _TDCOPY,
     _TDPST,
-    _TDRESET
+    _TDRESET // can likely be removed for bluejay
 };
 
 td_state_t cur_dance(qk_tap_dance_state_t *state);
@@ -292,7 +292,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
     case LT(0,KC_PLUS):
       if (!record->tap.count && record->event.pressed) {
-        tap_code16(KC_F9);   // Intercept hold function to send f9
+        tap_code16(KC_F9);   // Intercept hold function to send f9 -- can be removed for bluejay
         return false;
       }
       else if (record->tap.count && record->event.pressed) {
@@ -302,8 +302,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
     case LT(0,KC_MINS):
       if (!record->tap.count && record->event.pressed) {
-        process_unicodemap(__ucirc, record);   // Intercept hold function to send û, use send_unicode_string("û") if this doesn't work. qmkcombine with get_mods() & MOD_MASK_SHIFT (also test with get_oneshot_mods()), see https://docs.qmk.fm/#/feature_advanced_keycodes?id=checking-modifier-state
-        // or try to call the process_unicode_common() function directly from here with _ucirc (only one underscore)
+        process_unicodemap(__ucirc, record);   // Intercept hold function to send û.        
         return false;
       }
       break;
@@ -522,6 +521,7 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     case _MT_C_E:
     case _MT_A_O:
     case _MT_G_I:
+//    case LT(_EXT,KC_G): -- add here any LT or MT that are on letters, so G, B, M
       return true;
     default:
       return false;
