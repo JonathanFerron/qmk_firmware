@@ -143,58 +143,16 @@ const uint32_t PROGMEM unicode_map[] = {
 const custom_shift_key_t custom_shift_keys[] = {
   {KC_DOT , KC_EXLM}, // Shift . is !
   {KC_COMM, KC_QUES}, // Shift , is ?
-  {KC_PERC, KC_PIPE}, // Shift % is | -- will need to change this for bluejay
-  {KC_LPRN, KC_LT},   // Shift ( is <  -- will need to change this for bluejay
+  {KC_LT, KC_PIPE},   // Shift < is | 
+  {KC_GT, KC_HASH},   // Shift > is #
   {KC_COLN, KC_SCLN}, // Shift : is ; 
   {KC_LCBR, KC_RCBR}, // Shift { is } 
   {LT(0,KC_LBRC), KC_RBRC}, // Shift [ is ] 
   {KC_SLSH, KC_BSLS}, // Shift slash is backslash
-  {KC_RPRN, KC_GT} // Shift ) is >   -- will need to change this for bluejay
+  {KC_ASTR, KC_PLUS} // Shift * is +
 };
 
 uint8_t NUM_CUSTOM_SHIFT_KEYS = sizeof(custom_shift_keys) / sizeof(custom_shift_key_t);
-
-/* KC_NO = XXXXXXX
-   KC_TRANSPARENT = KC_TRNS = _______
-*/
-
-// tap dance
-typedef enum {
-    TD_NONE,
-    TD_UNKNOWN,
-    TD_SINGLE_TAP,
-    TD_SINGLE_HOLD,
-    TD_DOUBLE_TAP,
-    TD_DOUBLE_HOLD, // tap, release then hold
-    TD_DOUBLE_SINGLE_TAP, // Send two single taps
-    TD_TRIPLE_TAP,
-    TD_TRIPLE_HOLD  // tap, release, tap, release, then hold
-} td_state_t;
-
-typedef struct {
-    bool is_press_action;
-    td_state_t state;
-} td_tap_t;
-
-// Tap dance enums
-enum {
-    _TDUNDO, // may be able to remove all tap dances since we're only using them for tap and hold, which can be tackled easily in process_record_user()
-    _TDCOPY,
-    _TDPST,
-    _TDRESET // can likely be removed for bluejay
-};
-
-td_state_t cur_dance(qk_tap_dance_state_t *state);
-
-// For each tap dance. Declare it here so it can be used in any keymap.
-void undo_finished(qk_tap_dance_state_t *state, void *user_data);
-void undo_reset(qk_tap_dance_state_t *state, void *user_data);
-void copy_finished(qk_tap_dance_state_t *state, void *user_data);
-void copy_reset(qk_tap_dance_state_t *state, void *user_data);
-void pst_finished(qk_tap_dance_state_t *state, void *user_data);
-void pst_reset(qk_tap_dance_state_t *state, void *user_data);
-void rst_finished(qk_tap_dance_state_t *state, void *user_data);
-void rst_reset(qk_tap_dance_state_t *state, void *user_data);
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -290,16 +248,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
       }
       break;
-    case LT(0,KC_PLUS):
-      if (!record->tap.count && record->event.pressed) {
-        tap_code16(KC_F9);   // Intercept hold function to send f9 -- can be removed for bluejay
-        return false;
-      }
-      else if (record->tap.count && record->event.pressed) {
-        tap_code16(KC_PLUS); // Send KC_PLUS on tap
-        return false;        // Return false to ignore further processing of key
-      }
-      break;
     case LT(0,KC_MINS):
       if (!record->tap.count && record->event.pressed) {
         process_unicodemap(__ucirc, record);   // Intercept hold function to send û.        
@@ -321,6 +269,36 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case LT(0,KC_C):
       if (!record->tap.count && record->event.pressed) {
         process_unicodemap(__ccedi, record);   // Intercept hold function to send ç
+        return false;
+      }
+      break;
+    case LT(0,KC_Z):
+      if (!record->tap.count && record->event.pressed) {
+        tap_code16(LCTL(KC_Z));   // Intercept hold function to send undo
+        return false;
+      }
+      break;
+    case LT(0,KC_X):
+      if (!record->tap.count && record->event.pressed) {
+        tap_code16(LCTL(KC_X));   // Intercept hold function to send cut
+        return false;
+      }
+      break;
+    case LT(0,KC_Y):
+      if (!record->tap.count && record->event.pressed) {
+        tap_code16(LCTL(KC_Y));   // Intercept hold function to send redo
+        return false;
+      }
+      break;
+    case LT(0,KC_V):
+      if (!record->tap.count && record->event.pressed) {
+        tap_code16(LCTL(KC_V));   // Intercept hold function to send paste
+        return false;
+      }
+      break;
+    case LT(0,KC_W):
+      if (!record->tap.count && record->event.pressed) {
+        tap_code16(LCTL(KC_C));   // Intercept hold function to send copy
         return false;
       }
       break;
@@ -389,127 +367,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   return true;              // Return true for normal processing of tap keycode
 } // process_record_user()
-
-td_state_t cur_dance(qk_tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
-        
-        // Key has not been interrupted, but the key is still held. Means you want to send a 'HOLD'.
-        else return TD_SINGLE_HOLD;
-    } else if (state->count == 2) {
-        // TD_DOUBLE_SINGLE_TAP is to distinguish between typing "pepper", and actually wanting a double tap
-        // action when hitting 'pp'. Suggested use case for this return value is when you want to send two
-        // keystrokes of the key, and not the 'double tap' action/macro.
-        if (state->interrupted) return TD_DOUBLE_SINGLE_TAP;
-        else if (state->pressed) return TD_DOUBLE_HOLD;
-        else return TD_DOUBLE_TAP;
-    }
-
-    // Assumes no one is trying to type the same letter three times (at least not quickly).
-    // If your tap dance key is 'KC_W', and you want to type "www." quickly - then you will need to add
-    // an exception here to return a 'TD_TRIPLE_SINGLE_TAP', and define that enum just like 'TD_DOUBLE_SINGLE_TAP'
-    if (state->count == 3) {
-        if (state->interrupted || !state->pressed) return TD_TRIPLE_TAP;
-        else return TD_TRIPLE_HOLD;
-    } else return TD_UNKNOWN;
-}
-
-// Create an instance of 'td_tap_t' for the 'x' tap dance.
-static td_tap_t undotap_state = {
-    .is_press_action = true,
-    .state = TD_NONE
-};
-
-void undo_finished(qk_tap_dance_state_t *state, void *user_data) {
-    undotap_state.state = cur_dance(state);
-    switch (undotap_state.state) {
-        case TD_SINGLE_TAP: register_code16(LCTL(KC_Z)); break;
-        case TD_SINGLE_HOLD: register_code16(LCTL(KC_Y)); break;
-        default: break;
-//        case TD_DOUBLE_TAP: register_code(KC_ESC); break;
-  //      case TD_DOUBLE_HOLD: register_code(KC_LALT); break;
-        // Last case is for fast typing. Assuming your key is `f`:
-        // For example, when typing the word `buffer`, and you want to make sure that you send `ff` and not `Esc`.
-        // In order to type `ff` when typing fast, the next character will have to be hit within the `TAPPING_TERM`, which by default is 200ms.
-    //    case TD_DOUBLE_SINGLE_TAP: tap_code(KC_X); register_code(KC_X);
-    }
-}
-
-void undo_reset(qk_tap_dance_state_t *state, void *user_data) {
-    switch (undotap_state.state) {
-        case TD_SINGLE_TAP: unregister_code16(LCTL(KC_Z)); break;
-        case TD_SINGLE_HOLD: unregister_code16(LCTL(KC_Y)); break;
-        default: break;
-//        case TD_DOUBLE_TAP: unregister_code(KC_ESC); break;
-//        case TD_DOUBLE_HOLD: unregister_code(KC_LALT);
-//        case TD_DOUBLE_SINGLE_TAP: unregister_code(KC_X);
-    }
-    undotap_state.state = TD_NONE;
-}
-
-// Create an instance of 'td_tap_t' for the 'x' tap dance.
-static td_tap_t copytap_state = {
-    .is_press_action = true,
-    .state = TD_NONE
-};
-
-void copy_finished(qk_tap_dance_state_t *state, void *user_data) {
-    copytap_state.state = cur_dance(state);
-    switch (copytap_state.state) {
-        case TD_SINGLE_TAP: register_code16(LCTL(KC_C)); break;
-        case TD_SINGLE_HOLD: register_code16(LCTL(KC_X)); break;
-        default: break;
-    }
-}
-
-void copy_reset(qk_tap_dance_state_t *state, void *user_data) {
-    switch (copytap_state.state) {
-        case TD_SINGLE_TAP: unregister_code16(LCTL(KC_C)); break;
-        case TD_SINGLE_HOLD: unregister_code16(LCTL(KC_X)); break;
-        default: break;
-    }
-    copytap_state.state = TD_NONE;
-}
-
-// Create an instance of 'td_tap_t' for the 'x' tap dance.
-static td_tap_t psttap_state = {
-    .is_press_action = true,
-    .state = TD_NONE
-};
-
-void pst_finished(qk_tap_dance_state_t *state, void *user_data) {
-    psttap_state.state = cur_dance(state);
-    switch (psttap_state.state) {
-        case TD_SINGLE_TAP: register_code16(LCTL(KC_V)); break;
-        case TD_SINGLE_HOLD: register_code16(LCTL(LALT(KC_V))); break;
-        default: break;
-    }
-}
-
-void pst_reset(qk_tap_dance_state_t *state, void *user_data) {
-    switch (psttap_state.state) {
-        case TD_SINGLE_TAP: unregister_code16(LCTL(KC_V)); break;
-        case TD_SINGLE_HOLD: unregister_code16(LCTL(LALT(KC_V))); break;
-        default: break;
-    }
-    psttap_state.state = TD_NONE;
-}
-
-// tap dance logic for the "safe reset" button
-void rst_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count >= 3) {
-    // Reset the keyboard if you tap the key more than three times
-    reset_keyboard();
-    reset_tap_dance(state);
-  }
-}
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-    [_TDUNDO] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, undo_finished, undo_reset),
-    [_TDCOPY] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, copy_finished, copy_reset),
-    [_TDPST] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, pst_finished, pst_reset),
-    [_TDRESET] = ACTION_TAP_DANCE_FN(rst_finished)
-};
 
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
