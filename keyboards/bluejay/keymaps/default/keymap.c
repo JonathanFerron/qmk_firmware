@@ -35,7 +35,8 @@ enum {
   _PSTVALUE = SAFE_RANGE,
   _PSTFORMAT,
   _PSTFORMULA,
-  _PSTLINK
+  _PSTLINK,
+  _PSTSPECIAL
 };
 
 // mod tap keys
@@ -157,43 +158,43 @@ uint8_t NUM_CUSTOM_SHIFT_KEYS = sizeof(custom_shift_keys) / sizeof(custom_shift_
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_BASE] = LAYOUT_split_5_3x6_4(
-        KC_A, KC_B, KC_C, KC_D, KC_E,   KC_A, KC_B, KC_C, KC_D, KC_E,
-  KC_F, KC_G, KC_H, KC_I, KC_J, KC_K,   KC_F, KC_G, KC_H, KC_I, KC_J, KC_K,
-  KC_L, KC_M, KC_N, KC_O, KC_P, KC_Q,   KC_L, KC_M, KC_N, KC_O, KC_P, KC_Q,
-  KC_R, KC_S, KC_T, KC_U, KC_V, KC_W,   KC_R, KC_S, KC_T, KC_U, KC_V, KC_W,
-              KC_X, KC_Y, KC_Z, KC_0,   KC_X, KC_Y, KC_Z, KC_0
+                    KC_AT, KC_AMPR, KC_SLSH,          KC_LT,         KC_GT,                 KC_LPRN,        KC_RPRN, LT(0,KC_MINS), LT(0,KC_DLR), LT(0,KC_LBRC),
+   LT(0, KC_TAB),    KC_Q,    KC_D,LT(0,KC_H),         KC_W,         KC_B,                     KC_J,           KC_F,    LT(0,KC_U),   LT(0,KC_P), LT(0,__agrav), __egrav,
+         KC_COLN, _MT_G_A, _MT_A_S, _MT_C_R,        _MT_S_T,         KC_G,                     KC_M,        _MT_S_N,       _MT_C_E,      _MT_A_O,       _MT_G_I, KC_QUOT, 
+         KC_GESC,LT(0,KC_Z),LT(0,KC_X),LT(0,KC_Y),LT(0,KC_C),   LT(0,KC_V),                    KC_K,           KC_L,       KC_COMM,       KC_DOT, LT(0,__eaigu), __ecirc, 
+                       LT(0,KC_F4),LT(_NUM,KC_DEL),LT(_NAV,KC_BSPC), OSM(MOD_LSFT),                 LT(_SYM,KC_ENT),       LT(_FUN,KC_SPC),      KC_ASTR,       KC_EQL
 ),
 
 [_NAV] = LAYOUT_split_5_3x6_4(
-          KC_A, KC_B, KC_C, KC_D, KC_E,   KC_A, KC_B, KC_C, KC_D, KC_E,
-  KC_F, KC_G, KC_H, KC_I, KC_J, KC_K,   KC_F, KC_G, KC_H, KC_I, KC_J, KC_K,
-  KC_L, KC_M, KC_N, KC_O, KC_P, KC_Q,   KC_L, KC_M, KC_N, KC_O, KC_P, KC_Q,
-  KC_R, KC_S, KC_T, KC_U, KC_V, KC_W,   KC_R, KC_S, KC_T, KC_U, KC_V, KC_W,
-              KC_X, KC_Y, KC_Z, KC_0,   KC_X, KC_Y, KC_Z, KC_0  
+                  x_____x, x_____x, x_____x,        x_____x,       x_____x,                 x_____x,        x_____x,       x_____x,      x_____x,       x_____x,
+         x_____x, x_____x, x_____x, x_____x,        x_____x,       x_____x,                 x_____x,        KC_PGUP,       KC_UP,        x_____x,       x_____x, x_____x,
+         x_____x, KC_LGUI, KC_LALT, KC_LCTL,        KC_LSFT,       _______,                 x_____x,        KC_LEFT,       KC_DOWN,      KC_RGHT,       x_____x, x_____x,
+         x_____x, x_____x, x_____x, x_____x,        x_____x,       x_____x,                 x_____x,        KC_PGDN,       x_____x,      x_____x,       x_____x, x_____x,
+                           x_____x, x_____x,        x_____x,       x_____x,                 KC_HOME,         KC_END,       x_____x,      x_____x  
 ),
 
 [_NUM] = LAYOUT_split_5_3x6_4(
-           KC_A, KC_B, KC_C, KC_D, KC_E,   KC_A, KC_B, KC_C, KC_D, KC_E,
-  KC_F, KC_G, KC_H, KC_I, KC_J, KC_K,   KC_F, KC_G, KC_H, KC_I, KC_J, KC_K,
-  KC_L, KC_M, KC_N, KC_O, KC_P, KC_Q,   KC_L, KC_M, KC_N, KC_O, KC_P, KC_Q,
-  KC_R, KC_S, KC_T, KC_U, KC_V, KC_W,   KC_R, KC_S, KC_T, KC_U, KC_V, KC_W,
-              KC_X, KC_Y, KC_Z, KC_0,   KC_X, KC_Y, KC_Z, KC_0
+                  x_____x, x_____x, x_____x,        x_____x,       x_____x,                 KC_CIRC,        x_____x,       x_____x,      x_____x,       x_____x,
+         x_____x, x_____x, x_____x, x_____x,        _______,       x_____x,                 x_____x,           KC_7,          KC_8,         KC_9,       x_____x, x_____x,
+          UC_MOD, KC_LGUI, KC_LALT, KC_LCTL,        KC_LSFT,       x_____x,                 x_____x,           KC_4,          KC_5,         KC_6,       KC_PDOT, KC_PERC,
+         x_____x, x_____x, x_____x, x_____x,        x_____x,       x_____x,                 x_____x,           KC_1,          KC_2,         KC_3,       x_____x, x_____x,
+                           x_____x, x_____x,        KC_BSPC,       x_____x,                 KC_PENT,           KC_0,       x_____x,       KC_NUM  
 ),
 
 [_FUN] = LAYOUT_split_5_3x6_4(
-            KC_A, KC_B, KC_C, KC_D, KC_E,   KC_A, KC_B, KC_C, KC_D, KC_E,
-  KC_F, KC_G, KC_H, KC_I, KC_J, KC_K,   KC_F, KC_G, KC_H, KC_I, KC_J, KC_K,
-  KC_L, KC_M, KC_N, KC_O, KC_P, KC_Q,   KC_L, KC_M, KC_N, KC_O, KC_P, KC_Q,
-  KC_R, KC_S, KC_T, KC_U, KC_V, KC_W,   KC_R, KC_S, KC_T, KC_U, KC_V, KC_W,
-              KC_X, KC_Y, KC_Z, KC_0,   KC_X, KC_Y, KC_Z, KC_0
+                   KC_INS, x_____x, x_____x,        x_____x,       KC_PAUS,                 x_____x,        x_____x,       x_____x,      x_____x,       x_____x,
+         x_____x,   KC_F9,  KC_F10,  KC_F11,         KC_F12,       x_____x,                 x_____x,        x_____x,       x_____x,      x_____x,       x_____x,   DT_UP,
+         x_____x,   KC_F5,   KC_F6,   KC_F7,          KC_F8,       x_____x,                  _______,        KC_RSFT,       KC_RCTL,      KC_LALT,       KC_RGUI, DT_DOWN,
+         x_____x,   KC_F1,   KC_F2,   KC_F3,          KC_F4,       x_____x,                 x_____x,        x_____x,       x_____x,      x_____x,       x_____x, DT_PRNT,
+                           x_____x, x_____x,        x_____x,       x_____x,                 x_____x,        x_____x,       x_____x,      x_____x  
 ),
 
 [_SYM] = LAYOUT_split_5_3x6_4(
-           KC_A, KC_B, KC_C, KC_D, KC_E,   KC_A, KC_B, KC_C, KC_D, KC_E,
-  KC_F, KC_G, KC_H, KC_I, KC_J, KC_K,   KC_F, KC_G, KC_H, KC_I, KC_J, KC_K,
-  KC_L, KC_M, KC_N, KC_O, KC_P, KC_Q,   KC_L, KC_M, KC_N, KC_O, KC_P, KC_Q,
-  KC_R, KC_S, KC_T, KC_U, KC_V, KC_W,   KC_R, KC_S, KC_T, KC_U, KC_V, KC_W,
-              KC_X, KC_Y, KC_Z, KC_0,   KC_X, KC_Y, KC_Z, KC_0
+                _FMT_NUM0, _FMT_NUM2, _FMT_PCT,   _FMT_DATE,       x_____x,                 x_____x,        x_____x,       __utrem,      x_____x,       __itrem,
+         x_____x, x_____x, x_____x, x_____x,    _PSTFORMULA,    _PSTFORMAT,                 x_____x,        _______,       x_____x,      x_____x,       x_____x, x_____x,
+         x_____x, x_____x, x_____x, x_____x,        x_____x,     _PSTVALUE,                 x_____x,        KC_RSFT,       KC_RCTL,      KC_LALT,       KC_RGUI, x_____x,
+         x_____x, x_____x, x_____x, x_____x,    _PSTSPECIAL,      _PSTLINK,                 x_____x,        x_____x,       x_____x,      x_____x,       x_____x, x_____x,
+                           x_____x, x_____x,        KC_LCBR,       _______,                 x_____x,        x_____x,       x_____x,      x_____x 
 )
 
 };
@@ -296,7 +297,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
       }
       break;
-    case LT(0,KC_W):
+    case LT(0,KC_H):
       if (!record->tap.count && record->event.pressed) {
         tap_code16(LCTL(KC_C));   // Intercept hold function to send copy
         return false;
@@ -361,6 +362,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       tap_code16(LCTL(LALT(KC_V))); tap_code16(KC_F); tap_code16(KC_ENT); return false; break;
     case _PSTLINK:
       tap_code16(LCTL(LALT(KC_V))); tap_code16(KC_L); return false; break;
+    case _PSTSPECIAL:
+      tap_code16(LCTL(LALT(KC_V))); return false; break;
     }
 
   if (!process_custom_shift_keys(keycode, record)) { return false; }
@@ -378,7 +381,14 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     case _MT_C_E:
     case _MT_A_O:
     case _MT_G_I:
-//    case LT(_EXT,KC_G): -- add here any LT or MT that are on letters, so G, B, M
+//    case LT(_NAV, KC_G):
+//    case LT(_NUM, KC_W):
+//    case LT(_FUN, KC_M):
+//    case LT(_SYM, KC_F):
+//    case LT(_NUM,KC_DEL):
+    //case LT(_NAV,KC_BSPC):
+//    case LT(_SYM,KC_ENT):
+//    case LT(_FUN,KC_SPC):
       return true;
     default:
       return false;

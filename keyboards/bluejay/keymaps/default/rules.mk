@@ -12,7 +12,7 @@ COMMAND_ENABLE = no
 
 CONSOLE_ENABLE = no    ## make that a yes to enable key logger
 
-TAP_DANCE_ENABLE = yes
+##TAP_DANCE_ENABLE = yes
 
 DYNAMIC_TAPPING_TERM_ENABLE = yes
 
