@@ -28,7 +28,8 @@ enum bluejay_layers {
     _NAV, 
     _NUM, 
     _FUN, 
-    _SYM
+    _EXC,
+    _INT
 };
 
 enum {
@@ -82,7 +83,38 @@ enum unicode_names {
     _etrem,
     _Etrem,
     _itrem,
-    _Itrem
+    _Itrem,
+    _quest,
+    _excla,
+    _midot,
+    _aaigu,
+    _Aaigu,
+    _iaigu,
+    _Iaigu,
+    _igrav,
+    _Igrav,
+    _oaigu,
+    _Oaigu,
+    _ograv,
+    _Ograv,
+    _ntild,
+    _Ntild,
+    _uaigu,
+    _Uaigu,
+    _yaigu,
+    _Yaigu,
+    _ubrev,
+    _Ubrev,
+    _cgrav,
+    _Cgrav,
+    _ggrav,
+    _Ggrav,
+    _hgrav,
+    _Hgrav,
+    _jgrav,
+    _Jgrav,
+    _sgrav,
+    _Sgrav
 };
 
 const uint32_t PROGMEM unicode_map[] = {
@@ -123,22 +155,95 @@ const uint32_t PROGMEM unicode_map[] = {
     [_Etrem] = 0x00CB, // Ë
    
     [_itrem] = 0x00EF, // ï
-    [_Itrem] = 0x00CF  // Ï
+    [_Itrem] = 0x00CF, // Ï
+
+    [_quest] = 0x00BF, // ¿
+    [_excla] = 0x00A1, // ¡
+
+    [_midot] = 0x00B7, // · MIDDLE DOT
+
+    [_aaigu] = 0x00E1, // á
+    [_Aaigu] = 0x00C1, // Á
+
+    [_iaigu] = 0x00ED, // í
+    [_Iaigu] = 0x00CD, // Í
+
+    [_igrav] = 0x00EC, // ì
+    [_Igrav] = 0x00CC, // Ì
+
+    [_oaigu] = 0x00F3, // ó
+    [_Oaigu] = 0x00D3, // Ó
+
+    [_ograv] = 0x00F2, // ò
+    [_Ograv] = 0x00D2, // Ò
+
+    [_ntild] = 0x00F1, // ñ
+    [_Ntild] = 0x00D1, // Ñ
+
+    [_uaigu] = 0x00FA, // ú
+    [_Uaigu] = 0x00DA, // Ú
+
+    [_yaigu] = 0x00FD, // ý
+    [_Yaigu] = 0x00DD, // Ý
+
+    [_ubrev] = 0x016D, // ŭ
+    [_Ubrev] = 0x016C, // Ŭ
+
+    [_cgrav] = 0x0109, // ĉ
+    [_Cgrav] = 0x0108, // Ĉ
+
+    [_ggrav] = 0x011D, // ĝ
+    [_Ggrav] = 0x011C, // Ĝ
+
+    [_hgrav] = 0x0125, // ĥ
+    [_Hgrav] = 0x0124, // Ĥ
+
+    [_jgrav] = 0x0135, // ĵ 
+    [_Jgrav] = 0x0134, // Ĵ
+
+    [_sgrav] = 0x015D, // ŝ
+    [_Sgrav] = 0x015C // Ŝ
 };
+
+#define __aaigu XP(_aaigu, _Aaigu)
+#define __agrav XP(_agrav, _Agrav)
+#define __acirc XP(_acirc, _Acirc)
 
 #define __eaigu XP(_eaigu, _Eaigu)
 #define __egrav XP(_egrav, _Egrav)
-#define __agrav XP(_agrav, _Agrav)
-#define __ugrav XP(_ugrav, _Ugrav)
 #define __ecirc XP(_ecirc, _Ecirc)
-#define __acirc XP(_acirc, _Acirc)
-#define __ucirc XP(_ucirc, _Ucirc)
-#define __ocirc XP(_ocirc, _Ocirc)
-#define __icirc XP(_icirc, _Icirc)
-#define __ccedi XP(_ccedi, _Ccedi)
-#define __utrem XP(_utrem, _Utrem)
 #define __etrem XP(_etrem, _Etrem)
+
+#define __iaigu XP(_iaigu, _Iaigu)
+#define __igrav XP(_igrav, _Igrav)
+#define __icirc XP(_icirc, _Icirc)
 #define __itrem XP(_itrem, _Itrem)
+
+#define __oaigu XP(_oaigu, _Oaigu)
+#define __ograv XP(_ograv, _Ograv)
+#define __ocirc XP(_ocirc, _Ocirc)
+
+#define __uaigu XP(_uaigu, _Uaigu)
+#define __ugrav XP(_ugrav, _Ugrav)
+#define __ucirc XP(_ucirc, _Ucirc)
+#define __utrem XP(_utrem, _Utrem)
+
+#define __yaigu XP(_yaigu, _Yaigu)
+
+#define __ccedi XP(_ccedi, _Ccedi)
+
+#define __ntild XP(_ntild, _Ntild)
+
+#define __quest X(_quest)
+#define __excla X(_excla)
+#define __midot X(_midot)
+
+#define __ubrev XP(_ubrev, _Ubrev)
+#define __cgrav XP(_cgrav, _Cgrav)
+#define __ggrav XP(_ggrav, _Ggrav)
+#define __hgrav XP(_hgrav, _Hgrav)
+#define __jgrav XP(_jgrav, _Jgrav)
+#define __sgrav XP(_sgrav, _Sgrav)
 
 // custom shift keys
 const custom_shift_key_t custom_shift_keys[] = {
@@ -147,7 +252,7 @@ const custom_shift_key_t custom_shift_keys[] = {
   {KC_LT, KC_PIPE},   // Shift < is | 
   {KC_GT, KC_HASH},   // Shift > is #
   {KC_COLN, KC_SCLN}, // Shift : is ; 
-  {KC_LCBR, KC_RCBR}, // Shift { is } 
+//  {KC_LCBR, KC_RCBR}, // Shift { is } 
   {LT(0,KC_LBRC), KC_RBRC}, // Shift [ is ] 
   {KC_SLSH, KC_BSLS}, // Shift slash is backslash
   {KC_ASTR, KC_PLUS} // Shift * is +
@@ -160,22 +265,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT_split_5_3x6_4(
                     KC_AT, KC_AMPR, KC_SLSH,          KC_LT,         KC_GT,                 KC_LPRN,        KC_RPRN, LT(0,KC_MINS), LT(0,KC_DLR), LT(0,KC_LBRC),
    LT(0, KC_TAB),    KC_Q,    KC_D,LT(0,KC_H),         KC_W,         KC_B,                     KC_J,           KC_F,    LT(0,KC_U),   LT(0,KC_P), LT(0,__agrav), __egrav,
-         KC_COLN, _MT_G_A, _MT_A_S, _MT_C_R,        _MT_S_T,         KC_G,                     KC_M,        _MT_S_N,       _MT_C_E,      _MT_A_O,       _MT_G_I, KC_QUOT, 
+         KC_COLN, _MT_G_A, _MT_A_S, _MT_C_R,        _MT_S_T, LT(_NUM,KC_G),                     KC_M,        _MT_S_N,       _MT_C_E,      _MT_A_O,       _MT_G_I, KC_QUOT, 
          KC_GESC,LT(0,KC_Z),LT(0,KC_X),LT(0,KC_Y),LT(0,KC_C),   LT(0,KC_V),                    KC_K,           KC_L,       KC_COMM,       KC_DOT, LT(0,__eaigu), __ecirc, 
-                       LT(0,KC_F4),LT(_NUM,KC_DEL),LT(_NAV,KC_BSPC), OSM(MOD_LSFT),                 LT(_SYM,KC_ENT),       LT(_FUN,KC_SPC),      KC_ASTR,       KC_EQL
+                       LT(0,KC_F4),LT(_NUM,KC_DEL),LT(_NAV,KC_BSPC), OSM(MOD_LSFT),                 LT(_EXC,KC_ENT),       LT(_FUN,KC_SPC),   KC_ASTR,  LT(_INT,KC_EQL)
 ),
 
 [_NAV] = LAYOUT_split_5_3x6_4(
                   x_____x, x_____x, x_____x,        x_____x,       x_____x,                 x_____x,        x_____x,       x_____x,      x_____x,       x_____x,
          x_____x, x_____x, x_____x, x_____x,        x_____x,       x_____x,                 x_____x,        KC_PGUP,       KC_UP,        x_____x,       x_____x, x_____x,
-         x_____x, KC_LGUI, KC_LALT, KC_LCTL,        KC_LSFT,       _______,                 x_____x,        KC_LEFT,       KC_DOWN,      KC_RGHT,       x_____x, x_____x,
+         x_____x, KC_LGUI, KC_LALT, KC_LCTL,        KC_LSFT,       x_____x,                 x_____x,        KC_LEFT,       KC_DOWN,      KC_RGHT,       x_____x, x_____x,
          x_____x, x_____x, x_____x, x_____x,        x_____x,       x_____x,                 x_____x,        KC_PGDN,       x_____x,      x_____x,       x_____x, x_____x,
                            x_____x, x_____x,        x_____x,       x_____x,                 KC_HOME,         KC_END,       x_____x,      x_____x  
 ),
 
 [_NUM] = LAYOUT_split_5_3x6_4(
-                  x_____x, x_____x, x_____x,        x_____x,       x_____x,                 KC_CIRC,        x_____x,       x_____x,      x_____x,       x_____x,
-         x_____x, x_____x, x_____x, x_____x,        _______,       x_____x,                 x_____x,           KC_7,          KC_8,         KC_9,       x_____x, x_____x,
+                  x_____x, x_____x, x_____x,        x_____x,       x_____x,                 KC_CIRC,        x_____x,       KC_MINS,      x_____x,       x_____x,
+          KC_TAB, x_____x, x_____x, x_____x,        x_____x,       x_____x,                 x_____x,           KC_7,          KC_8,         KC_9,       x_____x, x_____x,
           UC_MOD, KC_LGUI, KC_LALT, KC_LCTL,        KC_LSFT,       x_____x,                 x_____x,           KC_4,          KC_5,         KC_6,       KC_PDOT, KC_PERC,
          x_____x, x_____x, x_____x, x_____x,        x_____x,       x_____x,                 x_____x,           KC_1,          KC_2,         KC_3,       x_____x, x_____x,
                            x_____x, x_____x,        KC_BSPC,       x_____x,                 KC_PENT,           KC_0,       x_____x,       KC_NUM  
@@ -184,17 +289,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_FUN] = LAYOUT_split_5_3x6_4(
                    KC_INS, x_____x, x_____x,        x_____x,       KC_PAUS,                 x_____x,        x_____x,       x_____x,      x_____x,       x_____x,
          x_____x,   KC_F9,  KC_F10,  KC_F11,         KC_F12,       x_____x,                 x_____x,        x_____x,       x_____x,      x_____x,       x_____x,   DT_UP,
-         x_____x,   KC_F5,   KC_F6,   KC_F7,          KC_F8,       x_____x,                  _______,        KC_RSFT,       KC_RCTL,      KC_LALT,       KC_RGUI, DT_DOWN,
+         x_____x,   KC_F5,   KC_F6,   KC_F7,          KC_F8,       x_____x,                  x_____x,        KC_RSFT,       KC_RCTL,      KC_LALT,       KC_RGUI, DT_DOWN,
          x_____x,   KC_F1,   KC_F2,   KC_F3,          KC_F4,       x_____x,                 x_____x,        x_____x,       x_____x,      x_____x,       x_____x, DT_PRNT,
                            x_____x, x_____x,        x_____x,       x_____x,                 x_____x,        x_____x,       x_____x,      x_____x  
 ),
 
-[_SYM] = LAYOUT_split_5_3x6_4(
-                _FMT_NUM0, _FMT_NUM2, _FMT_PCT,   _FMT_DATE,       x_____x,                 x_____x,        x_____x,       __utrem,      x_____x,       __itrem,
-         x_____x, x_____x, x_____x, x_____x,    _PSTFORMULA,    _PSTFORMAT,                 x_____x,        _______,       x_____x,      x_____x,       x_____x, x_____x,
+[_EXC] = LAYOUT_split_5_3x6_4(
+                _FMT_NUM0, _FMT_NUM2, _FMT_PCT,   _FMT_DATE,       x_____x,                 KC_LCBR,        KC_RCBR,       x_____x,      x_____x,       x_____x,
+         x_____x, x_____x, x_____x, x_____x,    _PSTFORMULA,    _PSTFORMAT,                 x_____x,        x_____x,       x_____x,      x_____x,       x_____x, x_____x,
          x_____x, x_____x, x_____x, x_____x,        x_____x,     _PSTVALUE,                 x_____x,        KC_RSFT,       KC_RCTL,      KC_LALT,       KC_RGUI, x_____x,
          x_____x, x_____x, x_____x, x_____x,    _PSTSPECIAL,      _PSTLINK,                 x_____x,        x_____x,       x_____x,      x_____x,       x_____x, x_____x,
-                           x_____x, x_____x,        KC_LCBR,       _______,                 x_____x,        x_____x,       x_____x,      x_____x 
+                           x_____x, x_____x,        x_____x,       _______,                 x_____x,        x_____x,       x_____x,      x_____x 
+),
+
+[_INT] = LAYOUT_split_5_3x6_4(
+                  x_____x, x_____x, x_____x, x_____x, x_____x,                              x_____x,        x_____x,       __utrem,      x_____x,       __itrem,
+         x_____x, x_____x, x_____x, __hgrav, x_____x, x_____x,                              __jgrav,        x_____x,       __ubrev,      __ograv,       __igrav, x_____x,
+         x_____x, __aaigu, __sgrav, x_____x, x_____x, __ggrav,                              x_____x,        __ntild,       __uaigu,      __oaigu,       __iaigu, x_____x,
+         x_____x, x_____x, x_____x, __yaigu, __cgrav, x_____x,                              x_____x,        x_____x,       __quest,      __excla,       __midot, x_____x,
+                           x_____x, x_____x, x_____x, _______,                              x_____x,        x_____x,       x_____x,      _______ 
 )
 
 };
