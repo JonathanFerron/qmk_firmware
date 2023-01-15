@@ -267,7 +267,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    LT(0, KC_TAB),    KC_Q,    KC_D,LT(0,KC_H),         KC_W,         KC_B,                     KC_J,           KC_F,    LT(0,KC_U),   LT(0,KC_P), LT(0,__agrav), __egrav,
          KC_COLN, _MT_G_A, _MT_A_S, _MT_C_R,        _MT_S_T, LT(_NUM,KC_G),                     KC_M,        _MT_S_N,       _MT_C_E,      _MT_A_O,       _MT_G_I, KC_QUOT, 
          KC_GESC,LT(0,KC_Z),LT(0,KC_X),LT(0,KC_Y),LT(0,KC_C),   LT(0,KC_V),                    KC_K,           KC_L,       KC_COMM,       KC_DOT, LT(0,__eaigu), __ecirc, 
-                       LT(0,KC_F4),LT(_NUM,KC_DEL),LT(_NAV,KC_BSPC), OSM(MOD_LSFT),                 LT(_EXC,KC_ENT),       LT(_FUN,KC_SPC),   KC_ASTR,  LT(_INT,KC_EQL)
+                       LT(0,KC_F4), LT(_INT,KC_DEL),LT(_NAV,KC_BSPC), OSM(MOD_LSFT),                 LT(_EXC,KC_ENT),       LT(_FUN,KC_SPC),   KC_ASTR,  KC_EQL
 ),
 
 [_NAV] = LAYOUT_split_5_3x6_4(
@@ -307,7 +307,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          x_____x, x_____x, x_____x, __hgrav, x_____x, x_____x,                              __jgrav,        x_____x,       __ubrev,      __ograv,       __igrav, x_____x,
          x_____x, __aaigu, __sgrav, x_____x, x_____x, __ggrav,                              x_____x,        __ntild,       __uaigu,      __oaigu,       __iaigu, x_____x,
          x_____x, x_____x, x_____x, __yaigu, __cgrav, x_____x,                              x_____x,        x_____x,       __quest,      __excla,       __midot, x_____x,
-                           x_____x, x_____x, x_____x, _______,                              x_____x,        x_____x,       x_____x,      _______ 
+                           x_____x, _______, x_____x, _______,                              OSM(MOD_LSFT),  x_____x,       x_____x,      x_____x 
 )
 
 };
